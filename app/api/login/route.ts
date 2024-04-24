@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 //import { v4 as uuidv4 } from 'uuid';
+import { cookies } from 'next/headers'
 
 async function streamToString(stream: any) {
     const chunks = [];
@@ -37,14 +38,13 @@ export async function POST(request: NextRequest) {
 
     // セッション期限の設定（1時間後）
     const expiresAt = new Date();
-    expiresAt.setHours(expiresAt.getHours() + 1);
-
+    expiresAt.setSeconds(expiresAt.getSeconds()+30);
     const sessiondata=[sessionID, id, expiresAt];
-
+    cookies().set("expires-at",expiresAt.toISOString())
     return new NextResponse(JSON.stringify({ auth: true }), {
         status: 200,
         headers: {
-            'Set-Cookie': `session-id=${sessionID}; HttpOnly;`
+            'Set-Cookie': `session-id=${sessionID}; Path=/; SameSite=Strict;`//HttpOnlyをつけてはならない。読めなく成る
         },
     })
 }

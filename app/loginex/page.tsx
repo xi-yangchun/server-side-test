@@ -1,7 +1,7 @@
-"use client"
+'use client'
 import React from 'react'
 import { useState } from 'react'
-import { useRouter } from 'next/router'
+import { useRouter } from 'next/navigation'
 import dynamic from 'next/dynamic'
 
 export default function Home() {
@@ -28,7 +28,9 @@ export default function Home() {
       body: "id="+id+"&"+"pw="+pw,
     })
     if(res.ok){
-        router.push("/report");
+        console.log("cookies:"+document.cookie
+          .replace(/(?:(?:^|.*;\s*)session-id\s*\=\s*([^;]*).*$)|^.*$/, "$1"));
+        router.push("/secure0");
     }
 
     const data = await res.json()
